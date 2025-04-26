@@ -1,0 +1,44 @@
+$primary-color: #8b1a1a;
+$secondary-color: #4b3c31;
+$accent-color: #f1e5c9;
+$button-bg-color: #8b1a1a;
+
+.custom-navbar {
+  background-color: $secondary-color;
+
+  .navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+    color: $accent-color;
+
+    &:hover {
+      color: lighten($accent-color, 10%);
+    }
+  }
+
+  .nav-link {
+    color: $accent-color;
+    margin-right: 1rem;
+    transition: color 0.3s;
+
+    &:hover {
+      color: lighten($accent-color, 15%);
+    }
+  }
+
+  .active-link {
+    font-weight: normal;
+    color: lighten($accent-color, 10%) !important;
+    opacity: 0.7;
+    text-decoration: none;
+  }
+
+  .logout-link {
+    cursor: pointer;
+    color: $accent-color;
+
+    &:hover {
+      color: lighten($primary-color, 10%);
+    }
+  }
+}

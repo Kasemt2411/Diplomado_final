@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">🍝 Sapori System</a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <!-- Inicio (solo aparece si NO estás en Home o Login) -->
+        <li class="nav-item" *ngIf="!isDashboard && !isHomeOrLogin">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Inicio</a
+          >
+        </li>
+
+        <!-- Login (solo aparece si NO estás en Login ni en Dashboard) -->
+        <li class="nav-item" *ngIf="!isDashboard && !router.url.includes('/login')">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active-link">Login</a>
+        </li>
+
+        <!-- Dashboard (solo aparece si NO estás en Home ni Login) -->
+        <li class="nav-item" *ngIf="!isHomeOrLogin">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active-link">Dashboard</a>
+        </li>
+
+        <!-- Logout (solo aparece si estás en el Dashboard) -->
+        <li class="nav-item" *ngIf="isDashboard">
+          <a class="nav-link logout-link" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

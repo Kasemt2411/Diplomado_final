@@ -1,0 +1,256 @@
+/* Estilos Generales */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #fffaf5;
+}
+
+/* Sección principal */
+.hero-section {
+  background-image: url('./../../../assets/img/img8.JPG');
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2rem 3rem;
+    text-align: center;
+    border-radius: 1rem;
+    backdrop-filter: blur(2px);
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+  }
+}
+
+/* Info sobre nosotros */
+.info-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 3rem 2rem;
+  background-color: #fef9f4;
+
+  .text {
+    flex: 1 1 50%;
+    padding: 1rem;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #4B3C31;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #333;
+    }
+  }
+
+  .image {
+    flex: 1 1 50%;
+    padding: 1rem;
+
+    img {
+      width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+/* Misión, Visión, Valores */
+.values-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 2rem;
+  background-color: #fff;
+
+  .value-card {
+    background: #fef9f4;
+    padding: 2rem;
+    width: 280px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #8B1A1A;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #4B3C31;
+    }
+  }
+}
+
+/* Menú de platos */
+.menu-section {
+  background-color: #F1E5C9;
+  padding: 3rem 2rem;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #8B1A1A;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+
+    .menu-item {
+      background-color: #fff;
+      width: 280px;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      img {
+        width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      h4 {
+        font-size: 1.6rem;
+        margin-top: 1rem;
+        color: #8B1A1A;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #4B3C31;
+      }
+    }
+  }
+}
+
+/* Testimonios */
+.testimonials-section {
+  background-color: #8B1A1A;
+  padding: 3rem 2rem;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #F1E5C9;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .testimonials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+
+    .testimonial-card {
+      background-color: #F1E5C9;
+      width: 300px;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+      p {
+        font-size: 1rem;
+        color: #4B3C31;
+      }
+    }
+  }
+}
+
+/* Ubicación */
+.location-section {
+  background-color: #F1E5C9;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #8B1A1A;
+    margin-bottom: 2rem;
+  }
+
+  .location-info {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .location-address,
+    .location-map {
+      margin-bottom: 2rem;
+
+      h3 {
+        font-size: 1.8rem;
+        color: #8B1A1A;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #4B3C31;
+      }
+
+      iframe {
+        width: 100%;
+        height: 300px;
+        border: none;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .info-section {
+    flex-direction: column;
+  }
+
+  .location-info {
+    padding: 1.5rem;
+
+    .location-map iframe {
+      height: 250px;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+.form-group {
+    margin-bottom: 1rem;
+}
+  
+  input.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+  
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+  
+  .error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+  
+  input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}  
