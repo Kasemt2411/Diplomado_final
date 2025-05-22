@@ -6,17 +6,17 @@
 
     <!-- Formulario de Login -->
     <form *ngIf="!isRegistering" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="email" formControlName="email" class="form-control" />
+      <div class="form-group mb-4">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" type="email" formControlName="email" class="form-control" placeholder="Correo electrónico" />
         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
           Ingresa un correo válido.
         </div>
       </div>
 
-      <div class="mb-3">
-        <label>Contraseña</label>
-        <input type="password" formControlName="password" class="form-control" />
+      <div class="form-group mb-4">
+        <label for="password" class="form-label">Contraseña</label>
+        <input id="password" type="password" formControlName="password" class="form-control" placeholder="Contraseña" />
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
           La contraseña es requerida.
         </div>
@@ -29,25 +29,25 @@
 
     <!-- Formulario de Registro -->
     <form *ngIf="isRegistering" [formGroup]="registerForm" (ngSubmit)="onRegister()">
-      <div class="mb-3">
-        <label>Nombre</label>
-        <input type="text" formControlName="name" class="form-control" />
+      <div class="form-group mb-4">
+        <label for="name" class="form-label">Nombre</label>
+        <input id="name" type="text" formControlName="name" class="form-control" placeholder="Tu nombre completo" />
         <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="error-message">
           Ingresa tu nombre completo.
         </div>
       </div>
 
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="email" formControlName="email" class="form-control" />
+      <div class="form-group mb-4">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" type="email" formControlName="email" class="form-control" placeholder="Correo electrónico" />
         <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-message">
           Ingresa un correo válido.
         </div>
       </div>
 
-      <div class="mb-3">
-        <label>Contraseña</label>
-        <input type="password" formControlName="password" class="form-control" />
+      <div class="form-group mb-4">
+        <label for="password" class="form-label">Contraseña</label>
+        <input id="password" type="password" formControlName="password" class="form-control" placeholder="Contraseña" />
         <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-message">
           La contraseña debe tener al menos 6 caracteres.
         </div>
@@ -58,8 +58,8 @@
       <div *ngIf="errorMsg" class="alert alert-danger mt-3">{{ errorMsg }}</div>
     </form>
 
-    <!-- Cambiar entre formularios -->
-    <div class="switch-form text-center mt-3">
+    <!-- Enlace para cambiar entre formularios -->
+    <div class="switch-form text-center mt-4">
       <a (click)="toggleForm()" style="cursor: pointer;">
         {{ isRegistering ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate' }}
       </a>

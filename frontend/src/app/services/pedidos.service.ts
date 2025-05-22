@@ -29,8 +29,9 @@ export class PedidosService {
   crearPedido(pedido: Pedido): Observable<Pedido> {
     return this.http.post<Pedido>(this.api, pedido).pipe(
       catchError(error => {
+        const mensaje = error?.error?.message || 'No se pudo crear el pedido.';
         console.error('Error al crear pedido:', error);
-        return throwError(() => new Error('No se pudo crear el pedido'));
+        return throwError(() => new Error(mensaje));
       })
     );
   }
@@ -39,8 +40,9 @@ export class PedidosService {
   obtenerPedidos(): Observable<Pedido[]> {
     return this.http.get<Pedido[]>(this.api).pipe(
       catchError(error => {
+        const mensaje = error?.error?.message || 'No se pudo obtener la lista de pedidos.';
         console.error('Error al obtener pedidos:', error);
-        return throwError(() => new Error('No se pudo obtener la lista de pedidos'));
+        return throwError(() => new Error(mensaje));
       })
     );
   }
@@ -49,8 +51,9 @@ export class PedidosService {
   editarPedido(_id: string, pedido: Pedido): Observable<Pedido> {
     return this.http.put<Pedido>(`${this.api}/${_id}`, pedido).pipe(
       catchError(error => {
+        const mensaje = error?.error?.message || 'No se pudo editar el pedido.';
         console.error('Error al editar pedido:', error);
-        return throwError(() => new Error('No se pudo editar el pedido'));
+        return throwError(() => new Error(mensaje));
       })
     );
   }
@@ -59,8 +62,9 @@ export class PedidosService {
   eliminarPedido(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.api}/${id}`).pipe(
       catchError(error => {
+        const mensaje = error?.error?.message || 'No se pudo eliminar el pedido.';
         console.error('Error al eliminar pedido:', error);
-        return throwError(() => new Error('No se pudo eliminar el pedido'));
+        return throwError(() => new Error(mensaje));
       })
     );
   }

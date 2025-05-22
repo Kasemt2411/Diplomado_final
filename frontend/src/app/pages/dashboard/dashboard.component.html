@@ -1,23 +1,23 @@
 <div class="dashboard-container">
-  <h2>Panel de Administración</h2>
+  <h2 class="dashboard-title">Panel de Administración</h2>
 
   <!-- GESTIÓN DE USUARIOS -->
   <section class="usuarios-section">
-    <h3>Gestión de Usuarios</h3>
+    <h3 class="section-title">Gestión de Usuarios</h3>
 
     <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()" class="mb-4">
       <div class="row g-3">
         <div class="col-md-3">
-          <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre completo" />
+          <input type="text" formControlName="nombre" class="form-control input-field" placeholder="Nombre completo" />
         </div>
         <div class="col-md-3">
-          <input type="email" formControlName="correo" class="form-control" placeholder="Correo electrónico" />
+          <input type="email" formControlName="correo" class="form-control input-field" placeholder="Correo electrónico" />
         </div>
         <div class="col-md-3">
-          <input type="password" formControlName="contraseña" class="form-control" placeholder="Contraseña" />
+          <input type="password" formControlName="contraseña" class="form-control input-field" placeholder="Contraseña" />
         </div>
         <div class="col-md-2">
-          <select formControlName="rol" class="form-select">
+          <select formControlName="rol" class="form-select input-field">
             <option value="">Rol</option>
             <option value="admin">Administrador</option>
             <option value="usuario">Usuario</option>
@@ -46,14 +46,14 @@
 
   <!-- FORMULARIO DE PEDIDOS -->
   <section class="crear-pedido mt-5">
-    <h3>{{ editandoPedido ? 'Editar Pedido' : 'Crear Pedido' }}</h3>
+    <h3 class="section-title">{{ editandoPedido ? 'Editar Pedido' : 'Crear Pedido' }}</h3>
     <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()">
       <div class="row mb-3">
         <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="cliente" placeholder="Cliente" />
+          <input type="text" class="form-control input-field" formControlName="cliente" placeholder="Cliente" />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" formControlName="mesa" placeholder="Mesa" />
+          <input type="text" class="form-control input-field" formControlName="mesa" placeholder="Mesa" />
         </div>
       </div>
 
@@ -64,13 +64,13 @@
           class="row g-2 mb-2"
         >
           <div class="col-md-4">
-            <input type="text" class="form-control" formControlName="nombre" placeholder="Plato" />
+            <input type="text" class="form-control input-field" formControlName="nombre" placeholder="Plato" />
           </div>
           <div class="col-md-2">
-            <input type="number" class="form-control" formControlName="cantidad" (input)="calcularTotal()" />
+            <input type="number" class="form-control input-field" formControlName="cantidad" (input)="calcularTotal()" />
           </div>
           <div class="col-md-4">
-            <input type="text" class="form-control" formControlName="observaciones" placeholder="Observaciones" />
+            <input type="text" class="form-control input-field" formControlName="observaciones" placeholder="Observaciones" />
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-outline-danger w-100" (click)="eliminarPlato(i)">Eliminar</button>
@@ -90,7 +90,7 @@
 
   <!-- LISTA DE PEDIDOS -->
   <section class="orders-section mt-5">
-    <h3>Pedidos</h3>
+    <h3 class="section-title">Pedidos</h3>
     <table class="table table-bordered table-striped">
       <thead class="table-light">
         <tr>
@@ -126,7 +126,7 @@
               {{ pedido.estado }}
             </span>
           </td>
-          <td class="d-flex flex-wrap gap-1">
+          <td class="acciones-cell">
             <button class="btn btn-sm btn-outline-primary" (click)="editarPedido(pedido)">Editar</button>
             <button class="btn btn-sm btn-outline-danger" (click)="cancelarPedido(pedido)">Cancelar</button>
             <button class="btn btn-sm btn-outline-success" (click)="marcarComoEntregado(pedido)">Entregar</button>

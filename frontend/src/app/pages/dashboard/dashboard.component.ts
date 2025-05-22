@@ -28,7 +28,7 @@ export interface Plato {
 export class DashboardComponent implements OnInit {
   usuarioForm: FormGroup;
   pedidoForm: FormGroup;
-  usuarios2: any;
+  usuarios2: Usuario[] = [];
   id: string | null = null;
 
   usuarioServices = inject(UsuariosService);
@@ -174,14 +174,11 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // ... (los imports y declaraciones anteriores se mantienen igual)
-
   editarPedido(pedido: Pedido) {
     if (!pedido._id) return;
     this.id = pedido._id;
     this.editandoPedido = true;
 
-    // Crear un nuevo FormArray de platos
     const nuevosPlatos = this.fb.array(
       pedido.platos.map(p => this.fb.group({
         nombre: [p.nombre, Validators.required],
@@ -190,7 +187,6 @@ export class DashboardComponent implements OnInit {
       }))
     );
 
-    // Reemplazar el array completo de platos y setear el resto del formulario
     this.pedidoForm.setControl('platos', nuevosPlatos);
     this.pedidoForm.patchValue({
       cliente: pedido.cliente,
@@ -198,9 +194,8 @@ export class DashboardComponent implements OnInit {
       total: pedido.total
     });
 
-    this.calcularTotal(); // recalcular el total visualmente
+    this.calcularTotal();
   }
-
 
   editarPedidoConfirmado() {
     if (!this.id || this.pedidoForm.invalid) return;
@@ -248,13 +243,37 @@ export class DashboardComponent implements OnInit {
       'cancelar': 'pendiente'
     };
     pedido.estado = flujo[pedido.estado];
+
+    if (pedido._id) {
+      this.pedidoService.editarPedido(pedido._id, pedido).subscribe({
+        next: () => this.obtenerPedidosDesdeApi(),
+        error: (err) => alert('Error al actualizar el estado del pedido')
+      });
+    }
   }
 
   marcarComoEntregado(pedido: Pedido) {
     pedido.estado = 'entregado';
+    if (pedido._id) {
+      this.pedidoService.editarPedido(pedido._id, pedido).subscribe({
+        next: () => this.obtenerPedidosDesdeApi(),
+        error: (err) => alert('Error al marcar como entregado')
+      });
+    }
   }
 
   cancelarPedido(pedido: Pedido) {
+    if (!confirm(`¿Seguro que deseas cancelar el pedido de ${pedido.cliente}?`)) return;
     this.eliminarPedido(pedido);
+  }
+
+  estadoBadge(estado: string): string {
+    switch (estado) {
+      case 'pendiente': return 'bg-warning text-dark';
+      case 'en preparación': return 'bg-info text-dark';
+      case 'entregado': return 'bg-success';
+      case 'cancelar': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
   }
 }

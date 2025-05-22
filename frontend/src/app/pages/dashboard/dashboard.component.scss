@@ -1,142 +1,170 @@
+// Variables de color
+$primary-color: #8b1a1a;         // Rojo suave
+$secondary-color: #4b3c31;       // Marrón suave
+$accent-color: #f1e5c9;          // Crema claro
+$button-bg-color: #8b1a1a;       // Rojo suave para botones
+$block-bg-color: #f3e8dc;        // Café clarito para bloques
+
+// Estilos generales
 .dashboard-container {
   padding: 2rem;
-  background-color: #fffaf5;
-  font-family: 'Segoe UI', sans-serif;
+  background-color: $accent-color;
+  min-height: 100vh;
+}
 
-  h2 {
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #4b3c31;
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: $primary-color;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+// Secciones principales
+.usuarios-section, .crear-pedido, .orders-section {
+  background-color: $block-bg-color;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $secondary-color;
+  margin-bottom: 1.5rem;
+}
+
+// Inputs
+.input-field {
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 5px rgba(139, 26, 26, 0.5);
+    outline: none;
+  }
+}
+
+// Tarjetas de usuarios
+.user-cards {
+  margin-top: 2rem;
+}
+
+.user-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
 
-  h3 {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: #8b1a1a;
+  .card-title {
+    color: $primary-color;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
   }
 
-  .usuarios-section,
-  .crear-pedido,
-  .orders-section {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
-    border-radius: 12px;
-    background-color: #fef9f4;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .user-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .user-card {
-    flex: 1 1 230px;
-    background: #fff;
-    padding: 1rem;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-
-    h5 {
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-
-    p {
-      font-size: 0.9rem;
-      color: #555;
-    }
-
-    .buttons {
-      margin-top: 0.5rem;
-
-      button {
-        font-size: 0.8rem;
-      }
-    }
-  }
-
-  .btn-outline-danger {
-    border-color: #dc3545;
-    color: #dc3545;
-
-    &:hover {
-      background-color: #dc3545;
-      color: #fff;
-    }
-  }
-
-  .btn-outline-primary {
-    border-color: #0d6efd;
-    color: #0d6efd;
-
-    &:hover {
-      background-color: #0d6efd;
-      color: #fff;
-    }
-  }
-
-  .btn-outline-warning {
-    border-color: #ffc107;
-    color: #ffc107;
-
-    &:hover {
-      background-color: #ffc107;
-      color: #000;
-    }
-  }
-
-  .btn-outline-success {
-    border-color: #198754;
-    color: #198754;
-
-    &:hover {
-      background-color: #198754;
-      color: #fff;
-    }
-  }
-
-  .btn-outline-info {
-    border-color: #0dcaf0;
-    color: #0dcaf0;
-
-    &:hover {
-      background-color: #0dcaf0;
-      color: #fff;
-    }
-  }
-
-  .form-control,
-  .form-select {
-    border-radius: 8px;
+  .card-text {
+    color: #555;
     font-size: 0.9rem;
   }
 
-  .badge {
-    font-size: 0.8rem;
-    padding: 0.4em 0.6em;
-    border-radius: 1rem;
-    text-transform: capitalize;
+  button {
+    margin-top: 0.5rem;
+    margin-right: 0.3rem;
   }
+}
 
-  table {
-    thead {
-      th {
-        background-color: #f1e5c9;
-        color: #4b3c31;
-        font-weight: 600;
-      }
-    }
+// Botones generales
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: background-color 0.3s, border-color 0.3s;
+}
 
-    td {
-      vertical-align: middle;
-    }
+// Botones de acciones pequeñas (editar, eliminar)
+.btn-outline-primary {
+  color: $primary-color;
+  border-color: $primary-color;
 
-    ul {
-      padding-left: 1rem;
-      margin-bottom: 0;
-    }
+  &:hover {
+    background-color: $primary-color;
+    color: #fff;
   }
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+
+  &:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border-color: #28a745;
+
+  &:hover {
+    background-color: #28a745;
+    color: #fff;
+  }
+}
+
+.btn-outline-warning {
+  color: #ffc107;
+  border-color: #ffc107;
+
+  &:hover {
+    background-color: #ffc107;
+    color: #212529;
+  }
+}
+
+.btn-outline-info {
+  color: #17a2b8;
+  border-color: #17a2b8;
+
+  &:hover {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+}
+
+// Botones principales (Agregar usuario, Agregar plato)
+button[type="submit"], button[type="button"].btn-secondary {
+  padding: 0.5rem 1rem;
+}
+
+// Tabla de pedidos
+.table {
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.table th {
+  background-color: $accent-color;
+  color: $secondary-color;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5em 0.7em;
+  border-radius: 0.5rem;
 }
