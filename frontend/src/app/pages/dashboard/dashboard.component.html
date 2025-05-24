@@ -2,43 +2,66 @@
   <h2 class="dashboard-title">Panel de Administración</h2>
 
   <!-- GESTIÓN DE USUARIOS -->
-  <section class="usuarios-section">
+  <section class="usuarios-section mb-5">
     <h3 class="section-title">Gestión de Usuarios</h3>
 
     <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()" class="mb-4">
-      <div class="row g-3">
+      <div class="row g-3 align-items-center">
         <div class="col-md-3">
           <input type="text" formControlName="nombre" class="form-control input-field" placeholder="Nombre completo" />
+          <div *ngIf="usuarioForm.get('nombre')?.touched && usuarioForm.get('nombre')?.invalid"
+            class="text-danger small">
+            Nombre es obligatorio.
+          </div>
         </div>
         <div class="col-md-3">
-          <input type="email" formControlName="correo" class="form-control input-field" placeholder="Correo electrónico" />
+          <input type="email" formControlName="correo" class="form-control input-field"
+            placeholder="Correo electrónico" />
+          <div *ngIf="usuarioForm.get('correo')?.touched && usuarioForm.get('correo')?.invalid"
+            class="text-danger small">
+            Correo válido es obligatorio.
+          </div>
         </div>
         <div class="col-md-3">
-          <input type="password" formControlName="contraseña" class="form-control input-field" placeholder="Contraseña" />
+          <input type="password" formControlName="contraseña" class="form-control input-field"
+            placeholder="Contraseña" />
+          <div *ngIf="usuarioForm.get('contraseña')?.touched && usuarioForm.get('contraseña')?.invalid"
+            class="text-danger small">
+            Contraseña (mínimo 6 caracteres) es obligatoria.
+          </div>
         </div>
         <div class="col-md-2">
           <select formControlName="rol" class="form-select input-field">
-            <option value="">Rol</option>
+            <option value="" disabled>Rol</option>
             <option value="admin">Administrador</option>
             <option value="usuario">Usuario</option>
           </select>
+          <div *ngIf="usuarioForm.get('rol')?.touched && usuarioForm.get('rol')?.invalid" class="text-danger small">
+            Selecciona un rol.
+          </div>
         </div>
-        <div class="col-md-1">
-          <button type="submit" class="btn btn-primary w-100">
+        <div class="col-md-1 d-grid">
+          <button type="submit" class="btn btn-primary">
             {{ editando ? 'Actualizar' : 'Agregar' }}
           </button>
         </div>
       </div>
     </form>
 
-    <div class="user-cards row">
-      <div *ngFor="let user of usuarios2" class="user-card card col-md-3 m-2 p-3 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">{{ user.nombre }}</h5>
-          <p class="card-text"><strong>Correo:</strong> {{ user.correo }}</p>
-          <p class="card-text"><strong>Rol:</strong> {{ user.rol }}</p>
-          <button class="btn btn-sm btn-outline-primary me-2" (click)="editarUsuario(user)">Editar</button>
-          <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(user)">Eliminar</button>
+    <div class="user-cards row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+      <div *ngFor="let user of usuarios2" class="col">
+        <div class="card user-card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">{{ user.nombre }}</h5>
+              <p class="card-text"><strong>Correo:</strong> {{ user.correo }}</p>
+              <p class="card-text"><strong>Rol:</strong> {{ user.rol }}</p>
+            </div>
+            <div class="card-actions mt-3">
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="editarUsuario(user)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(user)">Eliminar</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -48,40 +71,50 @@
   <section class="crear-pedido mt-5">
     <h3 class="section-title">{{ editandoPedido ? 'Editar Pedido' : 'Crear Pedido' }}</h3>
     <form [formGroup]="pedidoForm" (ngSubmit)="crearPedido()">
-      <div class="row mb-3">
+      <div class="row mb-3 g-3">
         <div class="col-md-6">
           <input type="text" class="form-control input-field" formControlName="cliente" placeholder="Cliente" />
+          <div *ngIf="pedidoForm.get('cliente')?.touched && pedidoForm.get('cliente')?.invalid"
+            class="text-danger small">
+            Cliente es obligatorio.
+          </div>
         </div>
         <div class="col-md-6">
           <input type="text" class="form-control input-field" formControlName="mesa" placeholder="Mesa" />
+          <div *ngIf="pedidoForm.get('mesa')?.touched && pedidoForm.get('mesa')?.invalid" class="text-danger small">
+            Mesa es obligatoria.
+          </div>
         </div>
       </div>
 
-      <div formArrayName="platos">
-        <div
-          *ngFor="let plato of platos.controls; let i = index"
-          [formGroupName]="i"
-          class="row g-2 mb-2"
-        >
+      <div formArrayName="platos" class="mb-3">
+        <div *ngFor="let plato of platos.controls; let i = index" [formGroupName]="i"
+          class="row g-2 mb-2 align-items-center">
           <div class="col-md-4">
             <input type="text" class="form-control input-field" formControlName="nombre" placeholder="Plato" />
+            <div *ngIf="plato.get('nombre')?.touched && plato.get('nombre')?.invalid" class="text-danger small">
+              Nombre del plato es obligatorio.
+            </div>
           </div>
           <div class="col-md-2">
-            <input type="number" class="form-control input-field" formControlName="cantidad" (input)="calcularTotal()" />
+            <input type="number" class="form-control input-field" formControlName="cantidad" (input)="calcularTotal()"
+              min="1" />
+            <div *ngIf="plato.get('cantidad')?.touched && plato.get('cantidad')?.invalid" class="text-danger small">
+              Cantidad debe ser al menos 1.
+            </div>
           </div>
           <div class="col-md-4">
-            <input type="text" class="form-control input-field" formControlName="observaciones" placeholder="Observaciones" />
+            <input type="text" class="form-control input-field" formControlName="observaciones"
+              placeholder="Observaciones" />
           </div>
-          <div class="col-md-2">
-            <button type="button" class="btn btn-outline-danger w-100" (click)="eliminarPlato(i)">Eliminar</button>
+          <div class="col-md-2 d-grid">
+            <button type="button" class="btn btn-outline-danger" (click)="eliminarPlato(i)">Eliminar</button>
           </div>
         </div>
       </div>
 
       <button type="button" class="btn btn-secondary mb-3" (click)="agregarPlato()">+ Plato</button>
-
       <p><strong>Total:</strong> ${{ pedidoForm.value.total }}</p>
-
       <button type="submit" class="btn btn-success">
         {{ editandoPedido ? 'Actualizar Pedido' : 'Crear Pedido' }}
       </button>
@@ -107,7 +140,7 @@
           <td>{{ pedido.cliente }}</td>
           <td>{{ pedido.mesa }}</td>
           <td>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled mb-0">
               <li *ngFor="let p of pedido.platos">
                 🍽️ {{ p.nombre }} x{{ p.cantidad }}
                 <span *ngIf="p.observaciones">({{ p.observaciones }})</span>
@@ -116,25 +149,185 @@
           </td>
           <td>$ {{ pedido.total | number:'1.0-0' }}</td>
           <td>
-            <span class="badge"
-              [ngClass]="{
-                'bg-warning text-dark': pedido.estado === 'pendiente',
-                'bg-info text-dark': pedido.estado === 'en preparación',
-                'bg-success': pedido.estado === 'entregado',
-                'bg-danger': pedido.estado === 'cancelar'
-              }">
+            <span class="badge" [ngClass]="estadoBadge(pedido.estado)">
               {{ pedido.estado }}
             </span>
           </td>
           <td class="acciones-cell">
-            <button class="btn btn-sm btn-outline-primary" (click)="editarPedido(pedido)">Editar</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="cancelarPedido(pedido)">Cancelar</button>
-            <button class="btn btn-sm btn-outline-success" (click)="marcarComoEntregado(pedido)">Entregar</button>
-            <button class="btn btn-sm btn-outline-warning" (click)="cambiarEstadoPedido(pedido)">Estado</button>
-            <button class="btn btn-sm btn-outline-info" (click)="verDetallePedido(pedido)">Ver</button>
+            <button class="btn btn-sm btn-outline-primary me-1 mb-1" (click)="editarPedido(pedido)">Editar</button>
+            <button class="btn btn-sm btn-outline-danger me-1 mb-1" (click)="cancelarPedido(pedido)">Cancelar</button>
+            <button class="btn btn-sm btn-outline-success me-1 mb-1"
+              (click)="marcarComoEntregado(pedido)">Entregar</button>
+            <button class="btn btn-sm btn-outline-warning me-1 mb-1"
+              (click)="cambiarEstadoPedido(pedido)">Estado</button>
+            <button class="btn btn-sm btn-outline-info mb-1" (click)="verDetallePedido(pedido)">Ver</button>
           </td>
         </tr>
       </tbody>
     </table>
   </section>
-</div>
+
+  <!-- GESTIÓN DE RESERVAS -->
+  <section class="reservas-section mt-5">
+    <h3 class="section-title">Gestión de Reservas</h3>
+
+    <form [formGroup]="reservaForm" (ngSubmit)="guardarReserva()" class="mb-4">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-3">
+          <input type="text" formControlName="nombreCliente" class="form-control input-field"
+            placeholder="Nombre del cliente" required />
+          <div *ngIf="reservaForm.get('nombreCliente')?.touched && reservaForm.get('nombreCliente')?.invalid"
+            class="text-danger small">
+            Nombre del cliente es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <input type="email" formControlName="correo" class="form-control input-field" placeholder="Correo electrónico"
+            required />
+          <div *ngIf="reservaForm.get('correo')?.touched && reservaForm.get('correo')?.invalid"
+            class="text-danger small">
+            Correo válido es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <input type="date" formControlName="fecha" class="form-control input-field" required />
+          <div *ngIf="reservaForm.get('fecha')?.touched && reservaForm.get('fecha')?.invalid" class="text-danger small">
+            Fecha es obligatoria.
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <input type="time" formControlName="hora" class="form-control input-field" required />
+          <div *ngIf="reservaForm.get('hora')?.touched && reservaForm.get('hora')?.invalid" class="text-danger small">
+            Hora es obligatoria.
+          </div>
+        </div>
+
+        <div class="col-md-1">
+          <input type="number" formControlName="cantidadPersonas" class="form-control input-field"
+            placeholder="Personas" min="1" required />
+          <div *ngIf="reservaForm.get('cantidadPersonas')?.touched && reservaForm.get('cantidadPersonas')?.invalid"
+            class="text-danger small">
+            Cantidad de personas es obligatoria y mayor que 0.
+          </div>
+        </div>
+
+        <div class="col-md-1">
+          <select formControlName="estado" class="form-select input-field" required>
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+          <div *ngIf="reservaForm.get('estado')?.touched && reservaForm.get('estado')?.invalid"
+            class="text-danger small">
+            Estado es obligatorio.
+          </div>
+        </div>
+
+        <div class="col-md-1 d-grid">
+          <button type="submit" class="btn btn-primary w-100">
+            {{ editandoReserva ? 'Actualizar' : 'Agregar' }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="reserva-cards row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+      <div *ngFor="let reserva of reservas" class="col">
+        <div class="card reserva-card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+              <h5 class="card-title">{{ reserva.nombreCliente }}</h5>
+              <p class="card-text"><strong>Correo:</strong> {{ reserva.correo }}</p>
+              <p class="card-text"><strong>Fecha:</strong> {{ reserva.fecha | date:'shortDate' }}</p>
+              <p class="card-text"><strong>Hora:</strong> {{ reserva.hora }}</p>
+              <p class="card-text"><strong>Personas:</strong> {{ reserva.cantidadPersonas }}</p>
+              <p class="card-text"><strong>Estado:</strong> {{ reserva.estado }}</p>
+            </div>
+            <div class="card-actions mt-3">
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="editarReserva(reserva)">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminarReserva(reserva)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- GESTIÓN DE INVENTARIOS -->
+<section class="inventarios-section mt-5">
+  <h3 class="section-title">Gestión de Inventarios</h3>
+
+  <form [formGroup]="inventarioForm" (ngSubmit)="guardarInventario()" class="mb-4">
+    <div class="row g-3 align-items-center">
+
+      <div class="col-md-3">
+        <input type="text" formControlName="nombre" class="form-control input-field" placeholder="Nombre del producto" required />
+        <div *ngIf="inventarioForm.get('nombre')?.touched && inventarioForm.get('nombre')?.invalid" class="text-danger small">
+          Nombre del producto es obligatorio.
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <input type="number" formControlName="cantidad" class="form-control input-field" placeholder="Cantidad" min="0" required />
+        <div *ngIf="inventarioForm.get('cantidad')?.touched && inventarioForm.get('cantidad')?.invalid" class="text-danger small">
+          Cantidad es obligatoria y no puede ser negativa.
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <input type="text" formControlName="unidad" class="form-control input-field" placeholder="Unidad (ej: kg, litro)" required />
+        <div *ngIf="inventarioForm.get('unidad')?.touched && inventarioForm.get('unidad')?.invalid" class="text-danger small">
+          Unidad es obligatoria.
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <input type="text" formControlName="descripcion" class="form-control input-field" placeholder="Descripción (opcional)" />
+      </div>
+
+      <div class="col-md-2">
+        <input type="number" formControlName="stockMinimo" class="form-control input-field" placeholder="Stock mínimo" min="0" />
+        <div *ngIf="inventarioForm.get('stockMinimo')?.touched && inventarioForm.get('stockMinimo')?.invalid" class="text-danger small">
+          Stock mínimo no puede ser negativo.
+        </div>
+      </div>
+
+      <div class="col-md-1 d-grid">
+        <button type="submit" class="btn btn-primary">
+          {{ editandoInventario ? 'Actualizar' : 'Agregar' }}
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+  <table *ngIf="inventarios.length > 0" class="table table-bordered table-striped">
+    <thead class="table-light">
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>Descripción</th>
+        <th>Stock Mínimo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let inventario of inventarios">
+        <td>{{ inventario.nombre }}</td>
+        <td>{{ inventario.cantidad }}</td>
+        <td>{{ inventario.unidad }}</td>
+        <td>{{ inventario.descripcion }}</td>
+        <td>{{ inventario.stockMinimo ?? '-' }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="editarInventario(inventario)">Editar</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="eliminarInventario(inventario)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="inventarios.length === 0" class="text-center text-muted">No hay registros en inventario.</p>
+</section>
