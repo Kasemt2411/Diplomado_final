@@ -15,7 +15,7 @@ export interface Inventario {
 export class InventarioService {
   private apiUrl = 'http://localhost:3000/api/inventario';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   obtenerInventario(): Observable<Inventario[]> {
     return this.http.get<Inventario[]>(this.apiUrl);
@@ -31,5 +31,12 @@ export class InventarioService {
 
   eliminarProducto(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  registrarMovimiento(id: string, movimiento: { tipo: string; cantidad: number; descripcion?: string }): Observable<Inventario> {
+    return this.http.post<Inventario>(`${this.apiUrl}/${id}/movimientos`, movimiento);
+  }
+  agregarProductosMasivo(productos: Inventario[]) {
+    return this.http.post<Inventario[]>(`${this.apiUrl}/masivo`, productos);
   }
 }

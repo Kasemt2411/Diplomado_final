@@ -8,6 +8,8 @@ import {
   AbstractControl
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 import { UsuariosService } from '../../services/usuarios.service';
 import { PedidosService, Pedido } from '../../services/pedidos.service';
@@ -31,46 +33,43 @@ export interface Plato {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  // Forms
   usuarioForm: FormGroup;
   pedidoForm: FormGroup;
   reservaForm: FormGroup;
   inventarioForm: FormGroup;
 
-  // Data arrays
   usuarios2: Usuario[] = [];
   usuarios: Usuario[] = [];
   pedidos: Pedido[] = [];
   reservas: Reserva[] = [];
   inventarios: Inventario[] = [];
 
-  // IDs para edición
   idUsuario: string | null = null;
   idPedido: string | null = null;
   idReserva: string | null = null;
   idInventario: string | null = null;
 
-  // Servicios inyectados
   usuarioServices = inject(UsuariosService);
   pedidoService = inject(PedidosService);
   reservaService = inject(ReservasService);
   inventarioService = inject(InventarioService);
 
-  // Flags de edición
   editando = false;
   editandoPedido = false;
   editandoReserva = false;
   editandoInventario = false;
 
-  // Entidades en edición
   usuarioEnEdicion: Usuario | null = null;
   reservaEnEdicion: Reserva | null = null;
   inventarioEnEdicion: Inventario | null = null;
+
+  filtroNombre: string = '';
+  mostrarSoloStockBajo: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.usuarioForm = this.fb.group({
@@ -104,7 +103,6 @@ export class DashboardComponent implements OnInit {
       stockMinimo: [0]
     });
 
-    // Inicializar con un plato
     this.agregarPlato();
   }
 
@@ -114,8 +112,6 @@ export class DashboardComponent implements OnInit {
     this.obtenerReservasDesdeApi();
     this.obtenerInventario();
   }
-
-  // --------- Usuarios ---------
 
   listarUsuarios(): void {
     this.usuarioServices.obtenerUsuarios().subscribe(u => {
@@ -129,9 +125,7 @@ export class DashboardComponent implements OnInit {
       this.marcarCamposComoTocados(this.usuarioForm);
       return;
     }
-
     const formData = this.usuarioForm.value;
-
     if (this.editando && this.usuarioEnEdicion) {
       this.usuarioServices.editarUsuarios(this.idUsuario!, formData).subscribe(() => {
         this.listarUsuarios();
@@ -160,7 +154,6 @@ export class DashboardComponent implements OnInit {
   eliminarUsuario(usuario: Usuario): void {
     if (!usuario._id) return;
     if (!confirm(`¿Eliminar a ${usuario.nombre}?`)) return;
-
     this.usuarioServices.eliminarUsuario(usuario._id).subscribe(() => {
       this.listarUsuarios();
       if (this.usuarioEnEdicion === usuario) this.cancelarEdicion();
@@ -173,8 +166,6 @@ export class DashboardComponent implements OnInit {
     this.idUsuario = null;
     this.usuarioForm.reset();
   }
-
-  // --------- Pedidos ---------
 
   get platos(): FormArray {
     return this.pedidoForm.get('platos') as FormArray;
@@ -206,7 +197,6 @@ export class DashboardComponent implements OnInit {
       this.marcarCamposComoTocados(this.pedidoForm);
       return;
     }
-
     if (this.editandoPedido && this.idPedido) {
       this.editarPedidoConfirmado();
     } else {
@@ -214,7 +204,6 @@ export class DashboardComponent implements OnInit {
         ...this.pedidoForm.value,
         estado: 'pendiente'
       };
-
       this.pedidoService.crearPedido(nuevoPedido).subscribe(() => {
         this.obtenerPedidosDesdeApi();
         this.pedidoForm.reset();
@@ -228,7 +217,6 @@ export class DashboardComponent implements OnInit {
     if (!pedido._id) return;
     this.idPedido = pedido._id;
     this.editandoPedido = true;
-
     const nuevosPlatos = this.fb.array(
       pedido.platos.map(p => this.fb.group({
         nombre: [p.nombre, Validators.required],
@@ -236,14 +224,12 @@ export class DashboardComponent implements OnInit {
         observaciones: [p.observaciones || '']
       }))
     );
-
     this.pedidoForm.setControl('platos', nuevosPlatos);
     this.pedidoForm.patchValue({
       cliente: pedido.cliente,
       mesa: pedido.mesa,
       total: pedido.total
     });
-
     this.calcularTotal();
   }
 
@@ -252,12 +238,10 @@ export class DashboardComponent implements OnInit {
       this.marcarCamposComoTocados(this.pedidoForm);
       return;
     }
-
     const pedidoActualizado: Pedido = {
       ...this.pedidoForm.value,
       estado: 'pendiente'
     };
-
     this.pedidoService.editarPedido(this.idPedido, pedidoActualizado).subscribe(() => {
       this.obtenerPedidosDesdeApi();
       this.pedidoForm.reset();
@@ -271,10 +255,22 @@ export class DashboardComponent implements OnInit {
   eliminarPedido(pedido: Pedido): void {
     if (!pedido._id) return;
     if (!confirm(`¿Eliminar el pedido de ${pedido.cliente}?`)) return;
-
     this.pedidoService.eliminarPedido(pedido._id).subscribe(() => {
       this.obtenerPedidosDesdeApi();
     });
+  }
+
+  paginaActualPedidos: number = 1;
+  registrosPorPaginaPedidos: number = 5;
+
+  get pedidosPaginados(): Pedido[] {
+    const inicio = (this.paginaActualPedidos - 1) * this.registrosPorPaginaPedidos;
+    const fin = inicio + this.registrosPorPaginaPedidos;
+    return this.pedidos.slice(inicio, fin);
+  }
+
+  get totalPaginasPedidos(): number {
+    return Math.ceil(this.pedidos.length / this.registrosPorPaginaPedidos);
   }
 
   verDetallePedido(pedido: Pedido): void {
@@ -292,7 +288,6 @@ export class DashboardComponent implements OnInit {
       'cancelar': 'pendiente'
     };
     pedido.estado = flujo[pedido.estado];
-
     if (pedido._id) {
       this.pedidoService.editarPedido(pedido._id, pedido).subscribe(() => this.obtenerPedidosDesdeApi());
     }
@@ -320,8 +315,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // --------- Reservas ---------
-
   obtenerReservasDesdeApi(): void {
     this.reservaService.obtenerReservas().subscribe(data => this.reservas = data);
   }
@@ -332,7 +325,6 @@ export class DashboardComponent implements OnInit {
       return;
     }
     const nuevaReserva: Reserva = this.reservaForm.value;
-
     if (this.editandoReserva && this.idReserva) {
       this.reservaService.editarReserva(this.idReserva, nuevaReserva).subscribe(() => {
         this.obtenerReservasDesdeApi();
@@ -353,9 +345,7 @@ export class DashboardComponent implements OnInit {
     this.idReserva = reserva._id;
     this.editandoReserva = true;
     this.reservaEnEdicion = reserva;
-
     const fechaFormateada = new Date(reserva.fecha).toISOString().split('T')[0];
-
     this.reservaForm.setValue({
       nombreCliente: reserva.nombreCliente,
       correo: reserva.correo,
@@ -369,11 +359,8 @@ export class DashboardComponent implements OnInit {
   eliminarReserva(reserva: Reserva): void {
     if (!reserva._id) return;
     if (!confirm(`¿Eliminar la reserva de ${reserva.nombreCliente}?`)) return;
-
     this.reservaService.eliminarReserva(reserva._id).subscribe(() => this.obtenerReservasDesdeApi());
   }
-
-  // --------- Inventario ---------
 
   obtenerInventario(): void {
     this.inventarioService.obtenerInventario().subscribe({
@@ -387,9 +374,7 @@ export class DashboardComponent implements OnInit {
       this.marcarCamposComoTocados(this.inventarioForm);
       return;
     }
-
     const nuevoProducto: Inventario = this.inventarioForm.value;
-
     if (this.editandoInventario && this.idInventario) {
       this.inventarioService.actualizarProducto(this.idInventario, nuevoProducto).subscribe({
         next: () => {
@@ -431,7 +416,6 @@ export class DashboardComponent implements OnInit {
   eliminarInventario(inventario: Inventario): void {
     if (!inventario._id) return;
     if (!confirm(`¿Eliminar el producto ${inventario.nombre}?`)) return;
-
     this.inventarioService.eliminarProducto(inventario._id).subscribe(() => {
       this.obtenerInventario();
       if (this.editandoInventario && this.idInventario === inventario._id) {
@@ -442,6 +426,94 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  registrarMovimientoInventario(producto: Inventario, tipo: 'entrada' | 'salida', cantidad: number): void {
+    if (!producto._id) return;
+
+    const descripcion = prompt(`Descripción para el movimiento de tipo ${tipo} (${cantidad}):`, '');
+
+    if (tipo === 'salida' && producto.cantidad < cantidad) {
+      alert(`No hay suficiente stock disponible para realizar la salida de ${cantidad} unidades.`);
+      return;
+    }
+
+    this.inventarioService.registrarMovimiento(producto._id, {
+      tipo,
+      cantidad,
+      descripcion: descripcion || ''
+    }).subscribe({
+      next: () => this.obtenerInventario(),
+      error: err => console.error('Error al registrar movimiento:', err)
+    });
+  }
+
+  inventariosFiltrados(): Inventario[] {
+    return this.inventarios.filter(inv => {
+      const coincideNombre = this.filtroNombre === '' ||
+        inv.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase());
+
+      const stockBajo = inv.cantidad < (inv.stockMinimo ?? 0);
+
+      return coincideNombre && (!this.mostrarSoloStockBajo || stockBajo);
+    });
+  }
+
+  // Variables de paginación para Inventario
+  paginaActualInventario: number = 1;
+  registrosPorPaginaInventario: number = 5;
+
+  get inventariosPaginados(): Inventario[] {
+    const filtrados = this.inventariosFiltrados(); // Aplica filtros si los hay
+    const inicio = (this.paginaActualInventario - 1) * this.registrosPorPaginaInventario;
+    const fin = inicio + this.registrosPorPaginaInventario;
+    return filtrados.slice(inicio, fin);
+  }
+
+  get totalPaginasInventario(): number {
+    return Math.ceil(this.inventariosFiltrados().length / this.registrosPorPaginaInventario);
+  }
+
+  procesarExcel(event: any): void {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+    lector.onload = (e: any) => {
+      const datosBinarios = e.target.result;
+      const libro = XLSX.read(datosBinarios, { type: 'binary' });
+      const hojaNombre = libro.SheetNames[0];
+      const hoja = libro.Sheets[hojaNombre];
+      const datos: any[] = XLSX.utils.sheet_to_json(hoja);
+
+      // Validación y conversión
+      const productos: Inventario[] = datos.map(row => ({
+        nombre: row['Nombre'] || '',
+        descripcion: row['Descripción'] || '',
+        cantidad: Number(row['Cantidad'] || 0),
+        unidad: row['Unidad'] || '',
+        stockMinimo: Number(row['Stock Mínimo'] || 0)
+      }));
+
+      // Filtrar registros válidos
+      const productosValidos = productos.filter(p => p.nombre && p.unidad);
+
+      if (productosValidos.length > 0) {
+        this.inventarioService.agregarProductosMasivo(productosValidos).subscribe({
+          next: () => {
+            this.obtenerInventario();
+            alert('Cargue masivo completado.');
+          },
+          error: err => {
+            console.error('Error cargando productos:', err);
+            alert('Error al cargar algunos productos.');
+          }
+        });
+      } else {
+        alert('No se encontraron productos válidos en el archivo.');
+      }
+    };
+
+    lector.readAsBinaryString(archivo);
+  }
 
   marcarCamposComoTocados(control: AbstractControl): void {
     if (control instanceof FormGroup || control instanceof FormArray) {

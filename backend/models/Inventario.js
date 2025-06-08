@@ -36,8 +36,8 @@ const inventarioSchema = new mongoose.Schema({
   },
   unidad: {
     type: String,
-    enum: ['kg', 'g', 'l', 'ml', 'unidades'],
-    required: true
+    required: true,
+    trim: true
   },
   stockMinimo: {
     type: Number,
@@ -49,5 +49,4 @@ const inventarioSchema = new mongoose.Schema({
 });
 
 const Inventario = mongoose.model('Inventario', inventarioSchema);
-
 module.exports = Inventario;

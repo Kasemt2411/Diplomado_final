@@ -22,7 +22,7 @@ $block-bg-color: #f3e8dc;        // Café clarito para bloques
 }
 
 // Secciones principales
-.usuarios-section, .crear-pedido, .orders-section, .reservas-section {
+.admin-section, .usuarios-section, .crear-pedido, .orders-section, .reservas-section {
   background-color: $block-bg-color;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -52,12 +52,8 @@ $block-bg-color: #f3e8dc;        // Café clarito para bloques
   }
 }
 
-// Tarjetas de usuarios
-.user-cards {
-  margin-top: 1rem;
-}
-
-.user-card {
+// Tarjetas base
+.card-base {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 0.75rem;
@@ -99,54 +95,11 @@ $block-bg-color: #f3e8dc;        // Café clarito para bloques
   }
 }
 
-// Tarjetas de reservas (misma estructura que usuarios)
-.reserva-cards {
-  margin-top: 1rem;
+.user-card, .reserva-card {
+  @extend .card-base;
 }
 
-.reserva-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  .card-title {
-    font-size: 1.1rem;
-    color: $primary-color;
-    margin-bottom: 0.5rem;
-  }
-
-  .card-text {
-    font-size: 0.85rem;
-    margin-bottom: 0.3rem;
-    color: #555;
-  }
-
-  .card-actions {
-    margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  button {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.6rem;
-  }
-}
-
-// Botones generales
+// Botones
 .btn {
   border-radius: 0.5rem;
   font-weight: 600;
@@ -155,7 +108,6 @@ $block-bg-color: #f3e8dc;        // Café clarito para bloques
   font-size: 0.9rem;
 }
 
-// Botones de acciones pequeñas
 .btn-outline-primary {
   color: $primary-color;
   border: 1px solid $primary-color;
@@ -207,9 +159,7 @@ $block-bg-color: #f3e8dc;        // Café clarito para bloques
   }
 }
 
-// Botones principales (Agregar usuario, Agregar plato)
-button[type="submit"],
-button[type="button"].btn-secondary {
+button[type="submit"], button[type="button"].btn-secondary {
   padding: 0.5rem 1rem;
   background-color: $button-bg-color;
   color: #fff;
@@ -222,122 +172,65 @@ button[type="button"].btn-secondary {
   }
 }
 
-// Tabla de pedidos
+// Tabla general
 .table {
-  border-radius: 1rem;
-  overflow: hidden;
-  background: #ffffff;
   width: 100%;
-  border-collapse: collapse;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.table th {
-  background-color: $accent-color;
-  color: $secondary-color;
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-}
-
-.table td {
-  padding: 1rem;
-  vertical-align: middle;
-  border-top: 1px solid #eee;
-}
-
-.badge {
-  font-size: 0.85rem;
-  padding: 0.5em 0.7em;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  display: inline-block;
-  background-color: lighten($primary-color, 40%);
-  color: $primary-color;
-}
-// Sección de Inventarios
-.inventarios-section {
-  background-color: $block-bg-color;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  border-collapse: separate;
+  border-spacing: 0;
   border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: $secondary-color;
-    margin-bottom: 1.5rem;
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
   }
 
-  form {
-    margin-bottom: 1.5rem;
+  th {
+    background-color: $accent-color;
+    color: $secondary-color;
+    font-weight: 600;
+  }
 
-    .row {
-      gap: 1rem;
+  tr:last-child td {
+    border-bottom: none;
+  }
 
-      .input-field {
-        border-radius: 0.5rem;
-        border: 1px solid #ccc;
-        padding: 0.5rem 1rem;
-        transition: border-color 0.3s, box-shadow 0.3s;
-        background-color: #fff;
+  tr.table-danger td {
+    background-color: #fdecea !important;
+  }
+}
 
-        &:focus {
-          border-color: $primary-color;
-          box-shadow: 0 0 5px rgba(139, 26, 26, 0.5);
-          outline: none;
-        }
-      }
 
-      .btn-primary {
-        background-color: $button-bg-color;
-        border: none;
-        color: #fff;
-        border-radius: 0.5rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: background-color 0.3s;
+// Sección Inventario
+.inventarios-section {
+  @extend .admin-section;
 
-        &:hover {
-          background-color: darken($button-bg-color, 10%);
-        }
-      }
+  .inventario-filtros {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    input {
+      max-width: 250px;
     }
   }
 
   table.table {
-    border-radius: 1rem;
-    overflow: hidden;
-    background: #ffffff;
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-
-    th {
-      background-color: $accent-color;
-      color: $secondary-color;
-      padding: 1rem;
-      text-align: left;
-      font-weight: 600;
-    }
-
-    td {
-      padding: 1rem;
-      vertical-align: middle;
-      border-top: 1px solid #eee;
+    th, td {
+      border: 1px solid #ddd; // Refuerzo de bordes visibles
     }
 
     button.btn-sm {
       font-size: 0.8rem;
       padding: 0.3rem 0.6rem;
       border-radius: 0.5rem;
-      transition: background-color 0.3s;
 
       &.btn-outline-primary {
         color: $primary-color;
         border: 1px solid $primary-color;
-        background-color: transparent;
 
         &:hover {
           background-color: $primary-color;
