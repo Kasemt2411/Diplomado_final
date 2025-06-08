@@ -9,7 +9,8 @@ git clone https://github.com/Kasemt2411/Diplomado_final.git
 Navega a la carpeta
 cd Diplomado_final/frontend
 3. Instalar dependencias
-npm install
+npm install 
+( en caso de ser nesesario instalar esta dependencia por si soloa npm install xlsx)
 4. Iniciar el servidor en la ruta cd Diplomado_final/frontend
 ng serve
 5. Verificación
